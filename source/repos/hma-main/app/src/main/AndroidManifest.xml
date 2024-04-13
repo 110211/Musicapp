@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/logo_hma"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logo_hma"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Hma.NoActionBar"
+        tools:targetApi="31">
+
+
+        <activity
+            android:name=".presentation.splash.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--        guest-->
+<!--        <activity android:name=".presentation.splash.SplashActivity" />-->
+        <activity android:name=".presentation.guest.login.LoginActivity" />
+        <activity android:name=".presentation.guest.forgotpassword.ForgotPasswordActivity" />
+        <activity android:name=".presentation.guest.register.RegisterActivity" />
+
+
+
+        <!--        app-->
+            <!--        download music-->
+<!--        <activity android:name=".presentation.app.download.DownloadActivity" />-->
+            <!--            profile-->
+                <!--                change pwd-->
+            <!--home music-->
+                <activity android:name=".presentation.app.home.HomeActivity" />
+            <!--download music-->
+                <activity android:name=".presentation.app.download.DownloadActivity" />
+            <!--playlist-->
+                <activity android:name=".presentation.app.playlist.PlaylistActivity"/>
+            <!--profile-->
+            <!--change pwd-->
+                <activity android:name=".presentation.app.profile.changepassword.ChangePasswordActivity" />
+            <!--reportbug -->
+                <activity android:name=".presentation.app.profile.reportbug.ReportBugActivity"/>
+            <!--play music -->
+                <activity android:name=".presentation.app.playmusic.PlayMusicActivity" />
+                <activity android:name=".presentation.app.home.component.SettingActivity" />
+        
+
+        <!--        provider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        <!--        service-->
+        <service android:enabled="true" android:foregroundServiceType="mediaPlayback" android:name=".common.services.MusicPlayService" />
+
+    </application>
+
+</manifest>

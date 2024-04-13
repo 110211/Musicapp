@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="registerViewModel"
+            type="com.huce.hma.presentation.guest.register.RegisterViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_auth">
+
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="99dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="99dp"
+            android:layout_marginBottom="543dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/logoapp" />
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="132dp"
+            android:layout_marginBottom="495dp"
+            android:fontFamily="@font/lexenddeca_bold"
+            android:gravity="center"
+            android:text="Xin chào"
+            android:textAppearance="@style/welcome"
+            android:textColor="#FDFDFD"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.487"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgLogo"
+            app:layout_constraintVertical_bias="0.802" />
+
+        <TextView
+            android:id="@+id/textViewSignUpToStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="132dp"
+            android:fontFamily="@font/lexenddeca_regular"
+            android:text="Đăng ký để bắt đầu trải nghiệm ngay"
+            android:textColor="#FDFDFD"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.513"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/welcome" />
+
+        <EditText
+            android:id="@+id/editTextTextEmailAddress"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginEnd="29dp"
+            android:ems="10"
+            android:fontFamily="@font/lexenddeca"
+            android:hint="Địa chỉ email"
+            android:inputType="textEmailAddress"
+            android:text="@={registerViewModel.user.email}"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/inputText"
+            android:textColor="#E4DADA"
+            android:textColorHint="#E4DADA"
+            app:layout_constraintBottom_toTopOf="@+id/editTextTextUsername"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/welcome"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/editTextTextUsername"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginEnd="29dp"
+            android:ems="10"
+            android:fontFamily="@font/lexenddeca"
+            android:hint="Tên người dùng"
+            android:inputType="textEmailAddress"
+            android:text="@={registerViewModel.user.username}"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/inputText"
+            android:textColor="#E4DADA"
+            android:textColorHint="#E4DADA"
+            app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="0dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginEnd="29dp"
+            android:ems="10"
+            android:fontFamily="@font/lexenddeca"
+            android:hint="Mật khẩu"
+            android:inputType="textPassword"
+            android:text="@={registerViewModel.user.password}"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/inputText"
+            android:textColor="#E4DADA"
+            android:textColorHint="#E4DADA"
+            android:textColorLink="#FDFDFD"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextUsername" />
+
+        <EditText
+            android:id="@+id/editTextCfPassword"
+            android:layout_width="0dp"
+            android:layout_height="59dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginEnd="29dp"
+            android:ems="10"
+            android:fontFamily="@font/lexenddeca"
+            android:hint="Nhập lại mật khẩu"
+            android:inputType="textPassword"
+            android:text="@={registerViewModel.confirmPassword}"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/inputText"
+            android:textColor="#E4DADA"
+            android:textColorHint="#E4DADA"
+            android:textColorLink="#FDFDFD"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="118dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="118dp"
+            android:layout_marginBottom="121dp"
+            android:width="351dp"
+            android:height="53dp"
+            android:backgroundTint="#5E6439"
+            android:onClick="@{() -> registerViewModel.registerHandler()}"
+            android:text="ĐĂNG KÝ"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextCfPassword" />
+
+        <TextView
+            android:id="@+id/sign_up"
+            style="@style/button_signup_signin"
+            android:layout_width="410dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="71dp"
+            android:fontFamily="@font/lexenddeca_medium"
+            android:letterSpacing="0"
+            android:text="Đã có tài khoản? Đăng nhập"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.783"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSignUp"
+            app:layout_constraintVertical_bias="0.038" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

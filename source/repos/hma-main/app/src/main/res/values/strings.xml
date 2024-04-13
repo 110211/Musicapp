@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">hma</string>
+    <string name="app_welcome">Welcome</string>
+    <string name="app_preference_file_key">HMA_FILE_KEY</string>
+
+    <string name="facebook_app_id">1023912995587539</string>
+    <string name="fb_login_protocol_scheme">fb1023912995587539</string>
+    <string name="facebook_client_token">b568c04edb5c1af9140dd2ca3aca87e4</string>
+
+
+    <string name="app_sign_in_to_start">Sign In To Start</string>
+    <string name="app_sign_up_to_start">Sign Up To Start</string>
+    <string name="app_register_to_start">Register To Start</string>
+    <string name="app_sign_in_email_text">Email</string>
+    <string name="app_sign_in_name_text">Name</string>
+    <string name="app_sign_in_username_text">Username</string>
+    <string name="app_sign_in_password_text">Password</string>
+    <string name="app_sign_in_confirm_password_text">Confirm Password</string>
+    <string name="app_sign_in_forgot_password_text">Forgot password?</string>
+    <string name="app_sign_in_sign_in_text">Sign In</string>
+    <string name="app_sign_in_sign_up_text">Sign Up</string>
+    <string name="app_sign_in_donot_have_account_text">Don\'t have an account yet? Sign Up</string>
+    <string name="app_sign_in_have_account_text">Have an account yet?</string>
+    <string name="app_sign_in">Sign in</string>
+    <string name="hmusic">HMusic\n</string>
+    <string name="reset_passw">Reset password</string>
+    <string name="please_ente">Please enter your email address or mobile number to send code.</string>
+    <string name="enter_your_">Enter your email or your phone number</string>
+    <string name="cancel_butt">Cancel</string>
+    <string name="send_button">Reset Password</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="close">Close</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="copyright_2">Copyright \u00A9 2023 - HMA</string>
+    <string name="enjoy_the_music">Enjoy the Music World</string>
+
+    <string-array name="type_of_bug">
+        <item>Báo Lỗi</item>
+        <item>Góp Ý</item>
+    </string-array>
+</resources>

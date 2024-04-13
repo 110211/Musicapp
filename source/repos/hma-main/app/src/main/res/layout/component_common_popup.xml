@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/popupFrameLayout"
+    tools:context=".common.component.PopupFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/popupLayout"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/popupThumbnailIcon"
+            android:layout_width="151dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:elevation="8dp"
+            android:src="@drawable/hma_logo"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/popupTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.526"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/popupTitle"
+            android:layout_width="207dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/lexenddeca_bold"
+            android:text="@string/title"
+            android:textAlignment="center"
+            android:textColor="#262626"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/popupDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/popupThumbnailIcon" />
+
+        <TextView
+            android:id="@+id/popupDescription"
+            android:layout_width="292dp"
+            android:layout_height="94dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/lexenddeca_medium"
+            android:gravity="center_horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/description"
+            android:textColor="#262626"
+            app:layout_constraintBottom_toTopOf="@+id/popupCloseButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/popupTitle" />
+
+        <Button
+            android:id="@+id/popupCloseButton"
+            android:layout_width="228dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/lexenddeca_bold"
+            android:text="Đóng"
+            android:textColor="@color/white"
+            app:cornerRadius="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/popupDescription"
+            app:layout_constraintVertical_bias="0.988" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
