@@ -142,32 +142,125 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/lexenddeca_black"
                 android:gravity="center"
-                android:text="Nhạc cho Ngày Đẹp Trời"
+                android:text="Có thể bạn muốn nghe"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/grid_album" />
+
+
+
             <HorizontalScrollView
                 android:id="@+id/scr_music_sunny_day"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/music_sunny_day">
 
-                <!-- Thêm nội dung của hsv_hot_albums ở đây -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Thêm các phần tử của scr_music_sunny_day ở đây -->
+                    <!-- Container for Thumbnail 1 and Song Name -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView1"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/testthb1"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Ngày đẹp nhất"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <!-- Container for Thumbnail 2 and Song Name -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView2"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/tuyam"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Túy Âm"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <!-- Container for Thumbnail 3 and Song Name -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/cuchillthoi"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Cứ chill thôi"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <!-- Container for Thumbnail 4 and Song Name -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/thanhxuan"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Thanh xuân"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
             </HorizontalScrollView>
 
             <!-- Album Hot -->
@@ -186,7 +279,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/scr_music_sunny_day" />
 
-            <!-- HorizontalScrollView cho Album Hot -->
             <HorizontalScrollView
                 android:id="@+id/hsv_hot_albums"
                 android:layout_width="0dp"
@@ -199,18 +291,102 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hot_albums">
 
-                <!-- Thêm nội dung của hsv_hot_albums ở đây -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Thêm các phần tử của hsv_hot_albums ở đây -->
+                    <!-- Container for Album Thumbnail 1 -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewAlbum1"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/mck"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="99%"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <!-- Container for Album Thumbnail 2 -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewAlbum2"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/danhdoi"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Đánh đổi"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <!-- Container for Album Thumbnail 3 -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewAlbum3"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/loichoi"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Lối chơi"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <!-- Container for Album Thumbnail 4 -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageViewAlbum4"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/ai"
+                            android:scaleType="fitCenter"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Ái"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
 
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!-- Súp Gà Cho Tâm Hồn -->
             <TextView
                 android:id="@+id/playlist"
                 style="@style/stl_trending"

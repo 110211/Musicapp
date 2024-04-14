@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
         scrollView = view.findViewById(R.id.scv_trending);
         listView = view.findViewById(R.id.list_recent_song);
         gridView = view.findViewById(R.id.grid_album);
-        artistsView  = view.findViewById(R.id.grid_artists);
+       // artistsView  = view.findViewById(R.id.grid_artists);
         if (loadingFragment == null) {
             loadingFragment = new LoadingDialog(getActivity());
         }
