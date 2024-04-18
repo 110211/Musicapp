@@ -18,6 +18,11 @@ import com.huce.hma.presentation.app.playlist.PlaylistActivity;
 import com.huce.hma.presentation.app.playmusic.PlayMusicActivity;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import android.content.SharedPreferences;
+import android.content.Context;
+import java.util.Set;
+import java.util.HashSet;
+import android.widget.Toast;
 
 public class RankAdapter extends ArrayAdapter<SongSearchResultDTO> {
     Context context;
@@ -75,20 +80,30 @@ public class RankAdapter extends ArrayAdapter<SongSearchResultDTO> {
     }
 
     // Method to handle adding to playlist
-    private void addToPlaylist(int position) {
-        // Display a dialog when addToPlaylistIcon is clicked
+    private void addToPlaylist(final int position) {
+        final SongSearchResultDTO selectedSong = arrayList.get(position);
+        // TODO: Lấy danh sách tên playlist từ SharedPreferences
+        final String[] playlists = {"Workout", "Favorites", "Chill"}; // Placeholder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Đã thêm vào playlist")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                        // Navigate to PlaylistActivity to handle adding to playlist
-                        Intent intent = new Intent(context, PlaylistActivity.class);
-                        context.startActivity(intent);
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.setTitle("Chọn Playlist");
+        builder.setItems(playlists, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                saveSongToPlaylist(playlists[which], selectedSong);
+            }
+        });
+        builder.show();
     }
+
+    private void saveSongToPlaylist(String playlistName, SongSearchResultDTO song) {
+        SharedPreferences prefs = context.getSharedPreferences("Playlists", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> songIds = prefs.getStringSet(playlistName, new HashSet<String>());
+        songIds.add(String.valueOf(song.getId())); // Đảm bảo song có phương thức getId()
+        editor.putStringSet(playlistName, songIds);
+        editor.apply();
+        Toast.makeText(context, "Đã thêm vào playlist: " + playlistName, Toast.LENGTH_SHORT).show();
+    }
+
+
 }

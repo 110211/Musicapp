@@ -3,217 +3,329 @@ package com.huce.hma.presentation.app.playmusic;
 import static com.huce.hma.common.utils.Utils.fmMilisecondsToTimeString;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.huce.hma.BuildConfig;
 import com.huce.hma.R;
 import com.huce.hma.common.services.MediaPlayerProvider;
-import com.huce.hma.data.remote.dto.HttpResponse;
-import com.huce.hma.data.remote.services.Retrofit;
+import com.huce.hma.data.local.model.Song;
 import com.huce.hma.presentation.app.home.DTO.SongSearchResultDTO;
 import com.squareup.picasso.Picasso;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class PlayMusicActivity extends AppCompatActivity {
-    ImageButton imgBack, imgFavorite, imgPrevious, imgPlay, imgNext, imgRepeat;
-    SeekBar seekBar;
+    ImageButton imgback, imgshare, imgsetting, imgadd, imgdow, imgfavorite, imgprevious, imgplay, imgnext, imgrepeat,addToPlaylistButton;
+    SeekBar skBar;
+
     ImageView circleImageView;
     ObjectAnimator objectAnimator;
     MediaPlayer mediaPlayer;
     TextView timeStart, timeEnd, nameSong, nameAlbum, nameAuthor;
+    private final String channelId = "music_channel";
+    private final int notificationId = 1;
+    private int currentPosition = 0;
     private boolean isRepeat = false;
     private boolean like = false;
-    private SongSearchResultDTO selectedSong;
-    private Handler mHandler = new Handler();
+    private SharedPreferences prefs;
 
+    private SongSearchResultDTO selectedSong;
+
+
+    @SuppressLint("SneakyThrows")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_music_play);
+        Intent intent = getIntent();
 
-        initView();
-        setupListeners();
-    }
+        // Initialize SharedPreferences
+        prefs = getSharedPreferences("UserPreferences", MODE_PRIVATE);
 
-    private void initView() {
-        imgBack = findViewById(R.id.backButton);
-        imgFavorite = findViewById(R.id.favoriteButton);
-        imgPrevious = findViewById(R.id.previousButton);
-        imgPlay = findViewById(R.id.playButton);
-        imgNext = findViewById(R.id.nextButton);
-        imgRepeat = findViewById(R.id.btn_loop);
-        seekBar = findViewById(R.id.seekBar);
-        circleImageView = findViewById(R.id.musicDiscImageView);
+        imgback = findViewById(R.id.backButton);
+        imgshare = findViewById(R.id.shareButton);
+        imgsetting = findViewById(R.id.settingButton);
         timeStart = findViewById(R.id.timeStart);
         timeEnd = findViewById(R.id.timeEnd);
+        imgrepeat = findViewById(R.id.btn_loop);
+        imgfavorite = findViewById(R.id.favoriteButton);
+        imgprevious = findViewById(R.id.previousButton);
+        imgplay = findViewById(R.id.playButton);
+        imgnext = findViewById(R.id.nextButton);
+        skBar = findViewById(R.id.seekBar);
         nameSong = findViewById(R.id.textViewAlbum);
         nameAlbum = findViewById(R.id.textViewSong);
         nameAuthor = findViewById(R.id.textViewAuthor);
+        circleImageView = findViewById(R.id.musicDiscImageView);
 
-        Intent intent = getIntent();
+        objectAnimator = ObjectAnimator.ofFloat(circleImageView, "rotation", 0f, 360f);
+        objectAnimator.setDuration(10000);
+        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+
+        mediaPlayer = MediaPlayerProvider.getInstance();
+
         selectedSong = (SongSearchResultDTO) intent.getSerializableExtra("selected_song");
-        if (selectedSong == null) {
-            Toast.makeText(this, "No song data!", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
         initializeMediaPlayer();
+
+        nameSong.setText(selectedSong.getName());
+        nameAuthor.setText(selectedSong.getArtistName());
+        nameAlbum.setText(selectedSong.getName());
+        long songId = selectedSong.getId();  // Assume ID is available from selectedSong
+        like = getLikeStatus(songId);
+        updateLikeButton(like);
+        addToPlaylistButton = findViewById(R.id.addToPlaylistButton);
+
+        Picasso.get().load(selectedSong.getThumbnail()).into(circleImageView);
+
+        setupListeners();
+//        public void onClick(View v) {
+//            showAddToPlaylistDialog();
+//        }
+//    });
+
     }
 
     private void setupListeners() {
-        imgBack.setOnClickListener(v -> finish());
-        imgFavorite.setOnClickListener(v -> toggleLike());
-        imgRepeat.setOnClickListener(v -> toggleRepeat());
-        imgPrevious.setOnClickListener(v -> skip(-5000)); // skip backwards 5 seconds
-        imgNext.setOnClickListener(v -> skip(5000)); // skip forward 5 seconds
-        imgPlay.setOnClickListener(v -> togglePlay());
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        imgback.setOnClickListener(view -> onBackPressed());
+
+        imgfavorite.setOnClickListener(view -> {
+            long songId = selectedSong.getId();
+            like = !like;
+            setLikeStatus(songId, like);
+            updateLikeButton(like);
+            Toast.makeText(this, like ? "Added to favorites" : "Removed from favorites", Toast.LENGTH_SHORT).show();
+        });
+
+        imgprevious.setOnClickListener(v -> mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() - 5000));
+        imgnext.setOnClickListener(v -> mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + 5000));
+        imgrepeat.setOnClickListener(v -> {
+            isRepeat = !isRepeat;
+            mediaPlayer.setLooping(isRepeat);
+            imgrepeat.setImageResource(isRepeat ? R.drawable.ic_loop : R.drawable.btn_loop);
+        });
+
+        imgplay.setOnClickListener(v -> {
+            if (mediaPlayer.isPlaying()) {
+                pauseMusic();
+            } else {
+                resumeMusic();
+            }
+        });
+
+
+        skBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (b) mediaPlayer.seekTo(i);
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress);
+                }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
+        addToPlaylistButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddToPlaylistDialog();
+            }
+        });
+    }
+
+    private boolean getLikeStatus(long songId) {
+        return prefs.getBoolean("LikeStatus_" + songId, false);
+    }
+
+    private void setLikeStatus(long songId, boolean isLiked) {
+        prefs.edit().putBoolean("LikeStatus_" + songId, isLiked).apply();
+    }
+
+    private void updateLikeButton(boolean isLiked) {
+        imgfavorite.setImageResource(isLiked ? R.drawable.ic_like : R.drawable.icon_heart);
     }
 
     private void initializeMediaPlayer() {
-        mediaPlayer = MediaPlayerProvider.getInstance();
-        mediaPlayer.reset();
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(BuildConfig.API_URL + "/api/v1/song/" + selectedSong.getId() + "/download");
             mediaPlayer.prepareAsync();
-        } catch (Exception e) {
-            Toast.makeText(this, "Error preparing media: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            mediaPlayer.setOnPreparedListener(mp -> {
+                mp.start();
+                updateSeekBar();
+                objectAnimator.start();
+            });
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        mediaPlayer.setOnPreparedListener(mp -> {
-            mp.start();
-            updateSeekBar();
-        });
-
-        objectAnimator = ObjectAnimator.ofFloat(circleImageView, "rotation", 0, 360);
-        objectAnimator.setDuration(10000);
-        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-        objectAnimator.start();
-
-        updateUI();
     }
 
-    private void togglePlay() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            objectAnimator.pause();
-            imgPlay.setImageResource(R.drawable.btn_play1);
-        } else {
-            mediaPlayer.start();
-            objectAnimator.resume();
-            imgPlay.setImageResource(R.drawable.btn_pause);
-        }
+    private void pauseMusic() {
+        mediaPlayer.pause();
+        imgplay.setImageResource(R.drawable.btn_play1);
+        objectAnimator.pause();
+    }
+
+    private void resumeMusic() {
+        mediaPlayer.start();
+        imgplay.setImageResource(R.drawable.btn_pause);
+        objectAnimator.resume();
         updateSeekBar();
     }
 
-    private void toggleRepeat() {
-        isRepeat = !isRepeat;
-        mediaPlayer.setLooping(isRepeat);
-        imgRepeat.setImageResource(isRepeat ? R.drawable.ic_loop : R.drawable.btn_loop);
-    }
-
-    private void skip(int ms) {
-        if (mediaPlayer != null) {
-            int newPosition = mediaPlayer.getCurrentPosition() + ms;
-            if (newPosition < 0) newPosition = 0;
-            else if (newPosition > mediaPlayer.getDuration()) newPosition = mediaPlayer.getDuration();
-            mediaPlayer.seekTo(newPosition);
-        }
-    }
-
-    private void toggleLike() {
-        like = !like;
-        SongService service = RetrofitClient.getSongService(); // Sử dụng RetrofitClient để lấy SongService
-        Call<HttpResponse<Object>> call = service.likeSong(String.valueOf(selectedSong.getId()));
-        call.enqueue(new Callback<HttpResponse<Object>>() {
-            @Override
-            public void onResponse(Call<HttpResponse<Object>> call, Response<HttpResponse<Object>> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Like status updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    like = !like; // revert if failed
-                    Toast.makeText(getApplicationContext(), "Failed to update like status", Toast.LENGTH_SHORT).show();
-                }
-                updateUI();
-            }
-
-            @Override
-            public void onFailure(Call<HttpResponse<Object>> call, Throwable t) {
-                like = !like; // revert if failed
-                Toast.makeText(getApplicationContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                updateUI();
-            }
-        });
-    }
-
-    private void updateUI() {
-        imgFavorite.setImageResource(like ? R.drawable.ic_like : R.drawable.icon_heart);
-        nameSong.setText(selectedSong.getName());
-        nameAuthor.setText(selectedSong.getArtistName());
-        //nameAlbum.setText(selectedSong.getAlbumName());
-        Picasso.get().load(selectedSong.getThumbnail()).into(circleImageView);
-    }
-
+    @SuppressLint("StaticFieldLeak")
     private void updateSeekBar() {
-        mHandler.postDelayed(updateSeekBarRunnable, 1000);
-    }
-
-    private Runnable updateSeekBarRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                seekBar.setMax(mediaPlayer.getDuration());
-                timeStart.setText(fmMilisecondsToTimeString(mediaPlayer.getCurrentPosition()));
-                timeEnd.setText(fmMilisecondsToTimeString(mediaPlayer.getDuration()));
-                mHandler.postDelayed(this, 1000);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                while (mediaPlayer.isPlaying()) {
+                    try {
+                        publishProgress();
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
             }
-        }
-    };
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateSeekBar();
+            @Override
+            protected void onProgressUpdate(Void... values) {
+                super.onProgressUpdate(values);
+                int duration = mediaPlayer.getDuration();
+                int currentPosition = mediaPlayer.getCurrentPosition();
+
+                skBar.setMax(duration);
+                skBar.setProgress(currentPosition);
+
+                timeStart.setText(fmMilisecondsToTimeString(currentPosition));
+                timeEnd.setText(fmMilisecondsToTimeString(duration));
+            }
+        }.execute();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mHandler.removeCallbacks(updateSeekBarRunnable);
+
+    private void showAddToPlaylistDialog() {
+        // Giả sử bạn có một mảng hoặc danh sách các playlist
+        final String[] playlists = {"Workout", "Favorites", "Chill"}; // Lấy danh sách từ SharedPreferences
+
+        // Thêm một tùy chọn để tạo playlist mới
+        List<String> playlistOptions = new ArrayList<>(Arrays.asList(playlists));
+        playlistOptions.add("Tạo playlist mới...");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(PlayMusicActivity.this);
+        builder.setTitle("Thêm vào playlist");
+        builder.setItems(playlistOptions.toArray(new String[0]), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == playlistOptions.size() - 1) {
+                    // Người dùng chọn tạo playlist mới
+                    showCreatePlaylistDialog();
+                } else {
+                    // Thêm bài hát vào playlist đã chọn
+                    saveSongToPlaylist(playlistOptions.get(which), selectedSong.getId());
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mediaPlayer.release();
-        objectAnimator.end();
+    private void showCreatePlaylistDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PlayMusicActivity.this);
+        builder.setTitle("Tạo playlist mới");
+
+        final EditText input = new EditText(PlayMusicActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newPlaylistName = input.getText().toString();
+                if (!newPlaylistName.isEmpty()) {
+                    // Lưu playlist mới và thêm bài hát vào playlist đó
+                    savePlaylist(newPlaylistName);
+                    saveSongToPlaylist(newPlaylistName, selectedSong.getId());
+                }
+            }
+        });
+        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
+
+    // Hàm này lưu tên của playlist mới vào SharedPreferences
+    private void savePlaylist(String newPlaylistName) {
+        SharedPreferences prefs = getSharedPreferences("Playlists", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> playlists = prefs.getStringSet("playlists", new HashSet<String>());
+        playlists.add(newPlaylistName); // Thêm tên playlist mới
+        editor.putStringSet("playlists", playlists);
+        editor.apply();
+    }
+
+    private void saveSongToPlaylist(String playlistName, long songId) {
+        SharedPreferences prefs = this.getSharedPreferences("Playlists", Context.MODE_PRIVATE);  // Sử dụng this thay vì getActivity()
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> songIds = prefs.getStringSet(playlistName, new HashSet<>());
+        songIds.add(String.valueOf(songId));
+        editor.putStringSet(playlistName, new HashSet<>(songIds));
+        editor.apply();
+        Toast.makeText(this, "Đã thêm vào playlist: " + playlistName, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void saveFavoriteSong(long songId) {
+        Set<String> favorites = prefs.getStringSet("favoriteSongs", new HashSet<String>());
+        favorites.add(String.valueOf(songId));
+        prefs.edit().putStringSet("favoriteSongs", favorites).apply();
+    }
+
+    private void removeFavoriteSong(long songId) {
+        Set<String> favorites = prefs.getStringSet("favoriteSongs", new HashSet<>());
+        favorites.remove(String.valueOf(songId));
+        prefs.edit().putStringSet("favoriteSongs", favorites).apply();
+    }
+    private Set<String> getFavoriteSongs() {
+        return prefs.getStringSet("favoriteSongs", new HashSet<>());
+    }
+
 }
+
+
+
+

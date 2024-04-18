@@ -59,7 +59,8 @@
             <!--play music -->
                 <activity android:name=".presentation.app.playmusic.PlayMusicActivity" />
                 <activity android:name=".presentation.app.home.component.SettingActivity" />
-        
+        <activity android:name="com.huce.hma.presentation.app.home.ArtistDetailActivity" />
+
 
         <!--        provider -->
         <provider

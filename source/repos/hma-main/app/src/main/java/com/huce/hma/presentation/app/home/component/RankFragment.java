@@ -36,7 +36,6 @@ public class RankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.activity_app_rank, container, false);
-//        LinearLayout linearLayout = new LinearLayout(this);
 //        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         listView = view.findViewById(R.id.trending_song);
         getData();

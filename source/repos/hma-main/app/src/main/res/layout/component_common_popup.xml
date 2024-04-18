@@ -27,7 +27,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:elevation="8dp"
-            android:src="@drawable/hma_logo"
+            android:src="@drawable/logo_hma"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/popupTitle"
             app:layout_constraintEnd_toEndOf="parent"

@@ -14,11 +14,14 @@ import lombok.Setter;
 
 @Entity(tableName = "songs")
 public class Song {
-    @PrimaryKey
+    @PrimaryKey    @Getter @Setter
+
     @NonNull public Long Id;
     public Long LyricId;
     public String Artist;
+    @Getter @Setter
     public String thumbnailPath;
+    @Getter @Setter
     public String Name;
     public String FilePath;
     @TypeConverters({TimestampConverter.class})
